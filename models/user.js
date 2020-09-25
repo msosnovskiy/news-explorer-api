@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
       validator: (v) => validator.isEmail(v),
       message: 'Указан неверный адрес почтового ящика',
     },
-    required: [true, 'Emaik является обязательным для заполения'],
+    required: [true, 'Email является обязательным для заполения'],
     unique: true,
   },
   password: {
