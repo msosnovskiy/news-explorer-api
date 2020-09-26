@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 module.exports.getUser = (req, res) => {
-  User.find({})
-    .then((users) => res.send({ data: users }))
+  User.find({ email: req.cookies.email }, { _id: false, email: true, name: true })
+    .then((user) => res.send(user))
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
@@ -14,7 +14,7 @@ module.exports.createUser = (req, res) => {
     email, password, name,
   } = req.body;
   if (!password) {
-    res.status(400).send({ message: 'пароль является обязательным для заполения' });
+    res.status(400).send({ message: 'Пароль является обязательным для заполения' });
   } else {
     bcrypt.hash(req.body.password, 10)
       .then((hash) => User.create({
@@ -42,7 +42,9 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      res.send({
+      //добавить лимит времени хранения куков
+      // eslint-disable-next-line no-undef
+      res.cookie('email', email).send({
         token: jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key', { expiresIn: '7d' }),
       });
     })
