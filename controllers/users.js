@@ -42,9 +42,10 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      //добавить лимит времени хранения куков
-      // eslint-disable-next-line no-undef
-      res.cookie('email', email).send({
+      res.cookie('email', email, {
+        maxAge: 3600000 * 24,
+        httpOnly: true,
+      }).send({
         token: jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key', { expiresIn: '7d' }),
       });
     })
