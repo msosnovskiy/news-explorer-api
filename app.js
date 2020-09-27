@@ -10,13 +10,13 @@ const { login, createUser } = require('./controllers/users');
 const users = require('./routes/users');
 const articles = require('./routes/articles');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const checkPassword = require('./middlewares/checkPassword');
 const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(helmet());
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(cookieParser());
@@ -30,8 +30,8 @@ mongoose.connect('mongodb://localhost:27017/news-explorer', {
 
 app.use(requestLogger);
 
-app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signin', checkPassword, login);
+app.post('/signup', checkPassword, createUser);
 app.use('/users', auth, users);
 app.use('/articles', auth, articles);
 
