@@ -33,7 +33,7 @@ module.exports.removeArticles = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Передан некорректный ID статьи');
+        throw new BadRequestError('Передан некорректный идентификатор статьи');
       }
       if (err.name === 'DocumentNotFoundError') {
         throw new NotFoundError('У вас нет статьи для удаления с указанным идентификатором');

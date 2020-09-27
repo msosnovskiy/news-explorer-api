@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (v) => validator.isEmail(v),
-      message: 'Указан неверный адрес почтового ящика',
+      message: 'Указан невалидный адрес почтового ящика',
     },
     required: [true, 'Почта - обязательное поле для заполнения'],
     unique: true,

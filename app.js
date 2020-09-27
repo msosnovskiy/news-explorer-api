@@ -4,13 +4,14 @@ const helmet = require('helmet');
 // const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-// const { celebrate, Joi, errors } = require('celebrate');
+const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const users = require('./routes/users');
 const articles = require('./routes/articles');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const checkPassword = require('./middlewares/checkPassword');
+const { validateAuthentication, validateUserBody } = require('./middlewares/validator');
 const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
@@ -30,8 +31,8 @@ mongoose.connect('mongodb://localhost:27017/news-explorer', {
 
 app.use(requestLogger);
 
-app.post('/signin', checkPassword, login);
-app.post('/signup', checkPassword, createUser);
+app.post('/signin', validateAuthentication, checkPassword, login);
+app.post('/signup', validateUserBody, checkPassword, createUser);
 app.use('/users', auth, users);
 app.use('/articles', auth, articles);
 
@@ -41,7 +42,7 @@ app.use(() => {
 
 app.use(errorLogger);
 
-// app.use(errors());
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
