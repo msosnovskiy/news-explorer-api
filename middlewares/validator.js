@@ -93,3 +93,10 @@ module.exports.validateArticlesBody = celebrate({
       }),
   }),
 });
+
+module.exports.validateArticlesParams = celebrate({
+  params: Joi.object().keys({
+    articleId: Joi.string().length(24).hex()
+      .message('articleId должен содержать только шестнадцатеричные символы'),
+  }),
+});
