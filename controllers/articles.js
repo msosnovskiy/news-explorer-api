@@ -1,12 +1,14 @@
 const Article = require('../models/article');
+const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
 
-module.exports.getArticles = (req, res) => {
+module.exports.getArticles = (req, res, next) => {
   Article.find({ owner: req.user._id })
-    .then((articles) => res.send(articles))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .then((articles) => res.send({ data: articles }))
+    .catch(next);
 };
 
-module.exports.createArticles = (req, res) => {
+module.exports.createArticles = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
@@ -16,12 +18,13 @@ module.exports.createArticles = (req, res) => {
     .then((article) => res.send({ data: article }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: err.message });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+        throw new BadRequestError(err.message);
+      } else next(err);
+    })
+    .catch(next);
 };
 
-module.exports.removeArticles = (req, res) => {
+module.exports.removeArticles = (req, res, next) => {
   Article.findOne({ _id: req.params.articleId, owner: req.user._id })
     .orFail()
     .then(async (article) => {
@@ -30,11 +33,11 @@ module.exports.removeArticles = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Передан некорректный идентификатор статьи' });
-        return;
+        throw new BadRequestError('Передан некорректный ID карточки');
       }
       if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'У вас нет статьи для удаления' });
-      } else res.status(500).send({ message: 'На сервере произошла ошибка' });
-    });
+        throw new NotFoundError('У вас нет статьи для удаления');
+      } else next(err);
+    })
+    .catch(next);
 };
