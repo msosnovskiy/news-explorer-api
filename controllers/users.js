@@ -22,7 +22,7 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
       name,
     }))
-    .then(() => res.send({
+    .then(() => res.status(201).send({
       email, name,
     }))
     .catch((err) => {

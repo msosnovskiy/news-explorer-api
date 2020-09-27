@@ -7,22 +7,22 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (v) => validator.isEmail(v),
-      message: 'Указан невалидный адрес почтового ящика',
+      message: 'Поле email должно быть валидным email-адресом',
     },
-    required: [true, 'Почта - обязательное поле для заполнения'],
+    required: [true, 'email - обязательное поле для заполнения'],
     unique: true,
   },
   password: {
     type: String,
-    required: [true, 'Пароль - обязательное поле для заполения'],
+    required: [true, 'password - обязательное поле для заполения'],
     select: false,
-    minlength: [8, 'Минимальное количество символов - 8'],
+    minlength: [8, 'Минимальная длина поля password - 8 символов'],
   },
   name: {
     type: String,
-    required: [true, 'Имя - обязательное поле для заполения'],
-    minlength: [2, 'Минимальное количество символов - 2'],
-    maxlength: [30, 'Максимальное количество символов - 30'],
+    required: [true, 'name - обязательное поле для заполения'],
+    minlength: [2, 'Минимальная длина поля name - 2 символа'],
+    maxlength: [30, 'Максимальное длина поля name - 30 символов'],
   },
 });
 

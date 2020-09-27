@@ -4,39 +4,39 @@ const validator = require('validator');
 const articleSchema = new mongoose.Schema({
   keyword: {
     type: String,
-    required: [true, 'Ключевое слово - обязательное поле для заполения'],
+    required: [true, 'keyword - обязательное поле для заполения'],
   },
   title: {
     type: String,
-    required: [true, 'Заголовок - обязательное поле для заполения'],
+    required: [true, 'title - обязательное поле для заполения'],
   },
   text: {
     type: String,
-    required: [true, 'Текст статьи - обязательное поле для заполения'],
+    required: [true, 'text - обязательное поле для заполения'],
   },
   date: {
     type: String,
-    required: [true, 'Дата - обязательное поле для заполения'],
+    required: [true, 'date - обязательное поле для заполения'],
   },
   source: {
     type: String,
-    required: [true, 'Источник - обязательное поле для заполения'],
+    required: [true, 'source - обязательное поле для заполения'],
   },
   link: {
     type: String,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'Передана некорректная ссылка на статью',
+      message: 'Поле link должно быть валидным url-адресом',
     },
-    required: [true, 'Сылка на статью - обязательное поле для заполения'],
+    required: [true, 'link - обязательное поле для заполения'],
   },
   image: {
     type: String,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'Передана некорректная ссылка на изображение',
+      message: 'Поле image должно быть валидным url-адресом',
     },
-    required: [true, 'Ссылка на иллюстрацию - обязательное поле для заполения'],
+    required: [true, 'image - обязательное поле для заполения'],
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
