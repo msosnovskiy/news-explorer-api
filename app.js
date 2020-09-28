@@ -1,7 +1,6 @@
 const express = require('express');
 require('dotenv').config();
 const helmet = require('helmet');
-// const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
@@ -14,15 +13,17 @@ const checkPassword = require('./middlewares/checkPassword');
 const { validateAuthentication, validateUserBody } = require('./middlewares/validator');
 const NotFoundError = require('./errors/NotFoundError');
 
-const { PORT = 3000 } = process.env;
+const {
+  NODE_ENV, PORT = 3000, DB_ADDS,
+} = process.env;
+
 const app = express();
 
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cookieParser());
 
-mongoose.connect('mongodb://localhost:27017/news-explorer', {
+mongoose.connect(NODE_ENV === 'production' ? DB_ADDS : 'mongodb://localhost:27017/news-explorer-dev', {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true,
