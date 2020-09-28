@@ -11,10 +11,11 @@ const articles = require('./routes/articles');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const checkPassword = require('./middlewares/checkPassword');
 const { validateAuthentication, validateUserBody } = require('./middlewares/validator');
+const { apiLimiter, createAccountLimiter } = require('./middlewares/limiter');
 const NotFoundError = require('./errors/NotFoundError');
 
 const {
-  NODE_ENV, PORT = 3000, DB_ADDS,
+  NODE_ENV, PORT = 3000, DB_ADDRESS,
 } = process.env;
 
 const app = express();
@@ -23,7 +24,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect(NODE_ENV === 'production' ? DB_ADDS : 'mongodb://localhost:27017/news-explorer-dev', {
+mongoose.connect(NODE_ENV === 'production' ? DB_ADDRESS : 'mongodb://localhost:27017/news-explorer-dev', {
   useUnifiedTopology: true,
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -32,8 +33,9 @@ mongoose.connect(NODE_ENV === 'production' ? DB_ADDS : 'mongodb://localhost:2701
 
 app.use(requestLogger);
 
+app.use(apiLimiter);
 app.post('/signin', validateAuthentication, checkPassword, login);
-app.post('/signup', validateUserBody, checkPassword, createUser);
+app.post('/signup', createAccountLimiter, validateUserBody, checkPassword, createUser);
 app.use('/users', auth, users);
 app.use('/articles', auth, articles);
 
