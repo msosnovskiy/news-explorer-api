@@ -2,7 +2,8 @@ const rateLimit = require('express-rate-limit');
 
 module.exports.apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 150,
+  max: 100,
+  message: ({ message: 'С этого IP-адреса отправлено слишком много запросов, повторите попытку позже' }),
 });
 
 module.exports.createAccountLimiter = rateLimit({
