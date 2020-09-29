@@ -57,4 +57,7 @@
 ## Доступ к API через доменное имя сервера
 [https://api.new-explorer.tk](https://api.new-explorer.tk)
 
-#### Проект доступен как по http, так и по https протоколу
+#### Проект доступен как по http, так и по https протоколу:
+- [http://api.new-explorer.tk](http://api.new-explorer.tk)
+- [https://api.new-explorer.tk](https://api.new-explorer.tk)
+
